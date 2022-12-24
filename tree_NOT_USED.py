@@ -126,3 +126,4 @@ class BinaryTreeIterator:
             return self.curr.value
         except OverflowError:
             raise StopIteration
+
