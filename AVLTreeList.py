@@ -24,6 +24,9 @@ class AVLNode(object):
         self.height = 0
         self.size = 1
 
+    def __repr__(self):
+        return f"{'<' if self.left else ''}{'^' if self.parent else ''}{f'({self.value})'}{'>' if self.right else ''}"
+
     """returns the size of the tree that is rooted in self
 	@type node: AVLNode
 	@param node: a node
@@ -302,7 +305,7 @@ class AVLNode(object):
             self.setRight(node)
             return
         self.right.insertLast(node)
-        self.setRight(self.right.rebalance())
+        self.setRight(self.right.rebalance()[0])
         self.setSize(self.calculateSize())
         self.setHeight(self.calculateHeight())
 
@@ -333,21 +336,24 @@ class AVLNode(object):
                         self.parent.setLeft(None)
 
             # case 2 only left child - connect parent and child of deleted node
+            # NEED TO CHECK IF THERE IS A PARENT TO RECONNECT
             elif self.right and not self.left:
-                # check which side to reconnect to parent
-                if self.parent.right is self:
-                    self.parent.setRight(self.right)
-                if self.parent.left is self:
-                    self.parent.setLeft(self.right)
+                if self.parent:
+                    # check which side to reconnect to parent
+                    if self.parent.right is self:
+                        self.parent.setRight(self.right)
+                    if self.parent.left is self:
+                        self.parent.setLeft(self.right)
                 self.setRight(None)
 
             # case 3 only right child - connect parent and child of deleted node
             elif self.left and not self.right:
-                # check which side to reconnect to parent
-                if self.parent.right is self:
-                    self.parent.setRight(self.left)
-                if self.parent.left is self:
-                    self.parent.setLeft(self.left)
+                if self.parent:
+                    # check which side to reconnect to parent
+                    if self.parent.right is self:
+                        self.parent.setRight(self.left)
+                    if self.parent.left is self:
+                        self.parent.setLeft(self.left)
                 self.setLeft(None)
 
             # both sides have children
@@ -478,11 +484,21 @@ class AVLNode(object):
         b.setRight(c)
         return b
 
+    def min(self):
+        if not self.left:
+            return self
+
+        return self.left.min()
+
+    def max(self):
+        if not self.right:
+            return self
+
+        return self.right.max()
+
     def successor(self):
         if self.right:
-            tmpAVL = AVLTreeList()
-            tmpAVL.root = self.right
-            return tmpAVL.first()
+            return self.right.min()
 
         p = self
         while p.parent and p.parent.right is p:
@@ -597,6 +613,10 @@ class AVLTreeList(object):
 	"""
 
     def insert(self, i, val):
+        # consider circular indexing
+        if not 0 <= i <= self.size:
+            i %= self.size
+
         # create new node to insert to the tree
         newnode = AVLNode(val)
 
@@ -744,7 +764,7 @@ class AVLTreeList(object):
     # using pre-order traversal of the tree.
     '''O(n * log(n))'''
     def _sort_rec(self, sorted_tree):
-        sorted_tree.regular_insert(self.root)
+        sorted_tree.regular_insert(AVLNode(self.root.value))
         if self.root.getLeft():
             left_sub_tree = AVLTreeList()
             left_sub_tree.regular_insert(self.root.getLeft())
@@ -763,8 +783,16 @@ class AVLTreeList(object):
 	"""
 
     def sort(self):
-        return self._sort_rec(AVLTreeList())
-
+        tmpBST: AVLTreeList = self._sort_rec(AVLTreeList())
+        result = AVLTreeList()
+        p = tmpBST.root
+        while p and p.getLeft():
+            p = p.getLeft()
+        while p and p.successor():
+            result.append(p.value)
+            p = p.successor()
+        result.append(p.value)
+        return result
 
     """permute the info values of the list 
 
@@ -781,8 +809,9 @@ class AVLTreeList(object):
         for i in indices:
             indices_list.append(i)
         while not indices_list.empty():
-            i = rand.randint(0, indices_list.size)
-            result.append(self.retrieve(i))
+            i = rand.randint(0, indices_list.size - 1)
+            random_index = indices_list.retrieve(i)
+            result.append(self.retrieve(random_index))
             indices_list.delete(i)
         return result
 
@@ -839,3 +868,8 @@ class AVLTreeList(object):
             return None
         return self.root
 
+    def __repr__(self):
+        return self.listToArray().__repr__()
+
+    def __iter__(self):
+        return self.listToArray().__iter__()
