@@ -49,7 +49,7 @@
 1. Fixed is_real_node
 2. added "regular_insertion()" to insert nodes by key and not by index to the AVLTreeList
 3. added "append()" as an "insert_last" to the AVLTreeList
-3. sort() -> _sort_rec performs an preorder traversal recursion and regular_inserts root by value to resulting AVLTree
+3. sort() -> _sort_rec performs a preorder traversal recursion and regular_inserts root by value to resulting AVLTree
 4. permutation creates an AVLTreeList of the indices, then picks a randint (0, n) and appends self[i] to results iff i is still unused
 5. concat(self, lst) traverses lst in-order and appends the elements one by one to self
 6. search(val) traverses self in-order until found node.value == val then returns index.

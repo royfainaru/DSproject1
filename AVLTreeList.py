@@ -717,6 +717,7 @@ class AVLTreeList(object):
     def length(self):
         return self.size
 
+    '''O(log(n))'''
     def regular_insert(self, node: AVLNode):
         if self.empty():
             self.root = node
@@ -741,6 +742,7 @@ class AVLTreeList(object):
     # The regular_insert sorts the tree
     # upon insertion by node's value.
     # using pre-order traversal of the tree.
+    '''O(n * log(n))'''
     def _sort_rec(self, sorted_tree):
         sorted_tree.regular_insert(self.root)
         if self.root.getLeft():
@@ -811,7 +813,7 @@ class AVLTreeList(object):
 	@param val: a value to be searched
 	@rtype: int
 	@returns: the first index that contains val, -1 if not found.
-	time complexity: ??????????????
+	time complexity: O(n) wc
 	"""
 
     def search(self, val):
