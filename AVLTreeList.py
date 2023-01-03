@@ -1,9 +1,10 @@
 # username - lb3
 # id1      - 206913519
 # name1    - Lior Ben Avraham
-# id2      - complete info
-# name2    - complete info
+# id2      - 207002403
+# name2    - Roy Fainaru
 
+import random as rand
 
 """A class represnting a node in an AVL tree"""
 
@@ -213,7 +214,7 @@ class AVLNode(object):
 	"""
 
     def isRealNode(self):
-        return self.getValue() is None
+        return self.getValue() is not None
 
     """sets size
 
@@ -477,6 +478,18 @@ class AVLNode(object):
         b.setRight(c)
         return b
 
+    def successor(self):
+        if self.right:
+            tmpAVL = AVLTreeList()
+            tmpAVL.root = self.right
+            return tmpAVL.first()
+
+        p = self
+        while p.parent and p.parent.right is p:
+            p = p.parent
+
+        return p.parent
+
     """finds the value of the successor node for a given node
 
 	@rtype: int
@@ -543,7 +556,7 @@ class AVLTreeList(object):
 
     def __init__(self):
         self.size = 0
-        self.root = None
+        self.root: AVLNode | None = None
 
     # add your fields here
 
@@ -611,6 +624,11 @@ class AVLTreeList(object):
 
         # return total number of rotations
         return rotcnt
+
+    def append(self, val):
+        self.insert(self.size, val)
+
+
 
     """deletes the i'th item in the list
 
@@ -699,25 +717,73 @@ class AVLTreeList(object):
     def length(self):
         return self.size
 
+    def regular_insert(self, node: AVLNode):
+        if self.empty():
+            self.root = node
+            self.size = 1
+            return
+
+        if node.getValue() <= self.root.getValue():
+            if self.root.getLeft():
+                left_sub_tree = AVLTreeList()
+                left_sub_tree.regular_insert(self.root.getLeft())
+                left_sub_tree.regular_insert(node)
+            else:
+                self.root.setLeft(node)
+        else:
+            if self.root.getRight():
+                right_sub_tree = AVLTreeList()
+                right_sub_tree.regular_insert(self.root.getRight())
+                right_sub_tree.regular_insert(node)
+            else:
+                self.root.setRight(node)
+
+    # The regular_insert sorts the tree
+    # upon insertion by node's value.
+    # using pre-order traversal of the tree.
+    def _sort_rec(self, sorted_tree):
+        sorted_tree.regular_insert(self.root)
+        if self.root.getLeft():
+            left_sub_tree = AVLTreeList()
+            left_sub_tree.regular_insert(self.root.getLeft())
+            sorted_tree = left_sub_tree._sort_rec(sorted_tree)
+        if self.root.getRight():
+            right_sub_tree = AVLTreeList()
+            right_sub_tree.regular_insert(self.root.getRight())
+            sorted_tree = right_sub_tree._sort_rec(sorted_tree)
+        return sorted_tree
+
     """sort the info values of the list
 
 	@rtype: list
 	@returns: an AVLTreeList where the values are sorted by the info of the original list.
-	time complexity: ?????????????
+	time complexity: O(n*log(n))
 	"""
 
     def sort(self):
-        return None
+        return self._sort_rec(AVLTreeList())
+
 
     """permute the info values of the list 
 
 	@rtype: list
 	@returns: an AVLTreeList where the values are permuted randomly by the info of the original list. ##Use Randomness
-	time complexity: ??????????????
+	time complexity: O(n*log(n))
 	"""
 
     def permutation(self):
-        return None
+        n = self.size
+        indices = range(n)
+        indices_list = AVLTreeList()
+        result = AVLTreeList()
+        for i in indices:
+            indices_list.append(i)
+        while not indices_list.empty():
+            i = rand.randint(0, indices_list.size)
+            result.append(self.retrieve(i))
+            indices_list.delete(i)
+        return result
+
 
     """concatenates lst to self
 
@@ -725,11 +791,19 @@ class AVLTreeList(object):
 	@param lst: a list to be concatenated after self
 	@rtype: int
 	@returns: the absolute value of the difference between the height of the AVL trees joined
-	time complexity: ??????????????
+	time complexity: O(k * log(n)) where n = self.size and k = lst.size
 	"""
 
     def concat(self, lst):
-        return None
+        to_return = abs(self.root.getHeight() - lst.root.getHeight())
+        p: AVLNode = lst.first()
+        max_p = lst.last()
+        while p != max_p:
+            self.append(p.value)
+            p = p.successor()
+        self.append(p.value)
+        return to_return
+
 
     """searches for a *value* in the list
 
@@ -741,7 +815,16 @@ class AVLTreeList(object):
 	"""
 
     def search(self, val):
-        return None
+        p: AVLNode = self.first()
+        i = 0
+        while p.value != val and p.successor():
+            p = p.successor()
+            i += 1
+
+        if p.value == val:
+            return i
+        return -1
+
 
     """returns the root of the tree representing the list
 
