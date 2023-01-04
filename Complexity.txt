@@ -10,11 +10,11 @@ class AVLNode:
 		Same as calculateSize()
 
 * getValueByRank(rank):
-	Time complexity: O(log(n)), where n is the number of nodes in the binary tree.
+	Time complexity: O(log(n))
       	This is because the method must travel downwards in the tree in order to find the node with the given value.
 
 * insert(self, rank, node):
-	Time complexity: O(logn), where n is the number of nodes in the AVL tree.
+	Time complexity: O(logn)
             This is because the method must perform a binary search to the rank,
 		which takes O(logn).
 		The method also performs a constant number of rotations, which takes
@@ -25,7 +25,7 @@ class AVLNode:
 		This is because the method must travel downwards in the tree to reach the last node.
 
 * delete(self, rank):
-	Time complexity: O(logn), where n is the number of nodes in the AVL tree.
+	Time complexity: O(logn)
             This is because the method must perform a logarithmic number of rotations in the worst case.
 
 * rebalance(self):
@@ -83,19 +83,19 @@ class AVLTreeList:
 		to the correct position to insert the given node.
 
 * _sort_rec(self, sorted_tree):
-	The time complexity of this method is O(n log(n)), where n is the number of nodes in the AVL tree.
+	The time complexity of this method is O(n log(n))
         This is because the method iterates through every node in the AVL tree once in order to add it
         to the sorted tree list, and each insertion has a time complexity of O(log(n)). Therefore, the
         overall time complexity is O(n * log(n)).
 
 * sort(self):
-	The time complexity of this method is O(n log(n)), where n is the number of nodes in the AVL tree.
+	The time complexity of this method is O(n log(n))
         This is because the method calls the `_sort_rec` method, which has a time complexity of O(n log(n)).
         The rest of the method has a o(n log(n)) time complexity.
 
 
 * permutation(self):
-	The time complexity of this method is O(n log(n)), where n is the number of nodes in the AVL tree.
+	The time complexity of this method is O(n log(n))
         This is because the method calls the `retrieve` and `delete` methods, which both have a time complexity
         of O(log(n)).
 
