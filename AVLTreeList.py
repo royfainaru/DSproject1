@@ -427,7 +427,7 @@ class AVLNode(object):
 	tuple of , and number of rotations
 	@returns: tuple containing 1) new subtree root (AVLNode)
 							   2) the number of rotations done to the tree during the rebalancing process
-	time complexity: O(logn)
+	time complexity: O(1)
 	"""
 
     def rebalance(self):
