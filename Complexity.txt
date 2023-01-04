@@ -1,0 +1,113 @@
+class AVLNode:
+
+* calculateSize(self):
+	Time complexity: O(1)
+      	This is because the method has a precondition that the size attributes of the left and right children
+      	are already updated.
+
+* calculateHeight(self):
+	Time complexity: O(1)
+		Same as calculateSize()
+
+* getValueByRank(rank):
+	Time complexity: O(log(n)), where n is the number of nodes in the binary tree.
+      	This is because the method must travel downwards in the tree in order to find the node with the given value.
+
+* insert(self, rank, node):
+	Time complexity: O(logn), where n is the number of nodes in the AVL tree.
+            This is because the method must perform a binary search to the rank,
+		which takes O(logn).
+		The method also performs a constant number of rotations, which takes
+		O(1).
+
+* insertLast(self, node):
+	Time complexity: O(logn)
+		This is because the method must travel downwards in the tree to reach the last node.
+
+* delete(self, rank):
+	Time complexity: O(logn), where n is the number of nodes in the AVL tree.
+            This is because the method must perform a logarithmic number of rotations in the worst case.
+
+* rebalance(self):
+     	Time complexity: O(1), since the method performs a constant number of operations.
+
+* min(self)/max(self):
+	Time complexity: O(logn)
+		This is because the method must travel downwards in the tree to reach the first/last node.
+
+* successor(self)/predecessor(self)/findSuccessorValue(self):
+	Time complexity: O(logn)
+		In the worst case, this method will traverse the height
+                         of the tree in order to find the successor.
+
+* listToArrayHelper(self):
+	Time complexity: O(n).
+		This method will traverse every node in the tree
+                         in order to add its value to the list.
+
+
+class AVLTreeList:
+
+* retrieve(self, index): 
+	Time complexity: O(log(n)).
+		In the worst case, this method will traverse the logarithm of the number 
+		of nodes in the tree in order to find the value at the given index.
+
+* insert(self, index, value)/append(self, value):
+	Time complexity: O(log(n)).
+		In the worst case, this method will traverse
+            the logarithm of the number of nodes in the tree in order to 
+		find the correct position for the new value.
+		A constant number of rotations are performed which takes O(1).
+
+
+* delete(self, index):
+	Time complexity: O(log(n))
+		In the worst case, this method will traverse
+            the logarithm of the number of nodes in the tree in order to find the correct node to delete,
+            and in the worst case, it also performs rotations to maintain the balance of the AVL tree.
+            The number of rotations performed depends on the balance factor of the nodes and can be at most
+            O(log n).
+
+* first(self)/last(self):
+	Time complexity: O(log(n)), because it performs a search in the tree to find the first/last element,
+        which is the node with rank 1/'size' in the tree.
+
+* listToArray(self):
+	Time complexity: O(n).
+	Because it must traverse through all the nodes of the tree in order to create the resulting list object.
+
+* regular_insert(self, node):
+	Time complexity: O(log(n))
+		Because it excerts a method of insertion which makes a binary search 
+		to the correct position to insert the given node.
+
+* _sort_rec(self, sorted_tree):
+	The time complexity of this method is O(n log(n)), where n is the number of nodes in the AVL tree.
+        This is because the method iterates through every node in the AVL tree once in order to add it
+        to the sorted tree list, and each insertion has a time complexity of O(log(n)). Therefore, the
+        overall time complexity is O(n * log(n)).
+
+* sort(self):
+	The time complexity of this method is O(n log(n)), where n is the number of nodes in the AVL tree.
+        This is because the method calls the `_sort_rec` method, which has a time complexity of O(n log(n)).
+        The rest of the method has a o(n log(n)) time complexity.
+
+
+* permutation(self):
+	The time complexity of this method is O(n log(n)), where n is the number of nodes in the AVL tree.
+        This is because the method calls the `retrieve` and `delete` methods, which both have a time complexity
+        of O(log(n)).
+
+* concat(self, lst):
+	The time complexity of this method is O(k log(n)), where k is the number of nodes in the tree list
+        'lst'. This is because the method calls the `append` method, which has a time complexity
+        of O(log(n)), for every inesrtion done from 'lst'.
+
+* search(self, val):
+	The time complexity of this method is O(n).
+        This is because the method iterates through every node in the AVL tree once in order to find the
+        node with the target value.
+
+* __repr__(self)/__iter__(self):
+	Time complexity is O(n), since it relies on a list converstion to return.

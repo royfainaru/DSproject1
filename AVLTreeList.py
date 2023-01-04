@@ -894,7 +894,7 @@ class AVLTreeList(object):
         The time complexity of this method is O(n log(n)), where n is the number of nodes in the AVL tree.
         This is because the method iterates through every node in the AVL tree once in order to add it
         to the sorted tree list, and each insertion has a time complexity of O(log(n)). Therefore, the
-        overall time complexity is O(n * log(n)) = O(n log(n)).
+        overall time complexity is O(n * log(n)).
 
         Parameters:
         sorted_tree (AVLTreeList): The sorted tree list to insert the nodes into.
