@@ -53,3 +53,14 @@
 4. permutation creates an AVLTreeList of the indices, then picks a randint (0, n) and appends self[i] to results iff i is still unused
 5. concat(self, lst) traverses lst in-order and appends the elements one by one to self
 6. search(val) traverses self in-order until found node.value == val then returns index.
+
+
+rebalance:
+        elif balance_factor < -1:
+            right_bf = self.right.getBF()
+            if right_bf > 0:
+                rotations_counter += 2
+                # case of right-left rotate (double)
+                rotations_counter += 2
+
+left and right rotate?
