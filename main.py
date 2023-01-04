@@ -191,9 +191,18 @@ def timer(func, i):
     return f"i: {i}, n: {n}, time: {t2 - t1}"
 
 
-funcs = [[avl_insert_first, linked_list_insert_first, array_insert_first], [avl_random_insert, linked_list_random_insert, array_random_insert], [avl_insert_last, linked_list_insert_last, array_insert_last]]
+print('q1')
+q1()
+print('q2')
+q2()
+print('q3')
+q3()
 
-for insertion_position in funcs:
-    for func in insertion_position:
-        for i in range(1, 11):
-            print(timer(func, i))
+
+#
+# funcs = [[avl_insert_first, linked_list_insert_first, array_insert_first], [avl_random_insert, linked_list_random_insert, array_random_insert], [avl_insert_last, linked_list_insert_last, array_insert_last]]
+#
+# for insertion_position in funcs:
+#     for func in insertion_position:
+#         for i in range(1, 11):
+#             print(time)
