@@ -2,6 +2,7 @@ from AVLTreeList import AVLTreeList
 from LinkedList import LinkedList
 import random as rand
 import time
+import pandas as pd
 
 # t = AVLTreeList.AVLTreeList()
 # print(t.insert(0, "val1"))
@@ -64,7 +65,7 @@ import time
 ALL_I_VALUES = range(1, 11)
 
 
-def insert_all_numbers(n):
+def insert_all_numbers(n) -> tuple[int, AVLTreeList]:
     all_elements = list(range(n))
     AVL_list = AVLTreeList()
     rotcnt = 0
@@ -75,14 +76,14 @@ def insert_all_numbers(n):
     return rotcnt, AVL_list
 
 
-def delete_all_elements(AVL_list: AVLTreeList):
+def delete_all_elements(AVL_list: AVLTreeList) -> int:
     rotcnt = 0
     while not AVL_list.empty():
         rotcnt += AVL_list.delete(rand.randint(0, AVL_list.size))
     return rotcnt
 
 
-def alternate_insert_delete(AVL_list: AVLTreeList, elements_to_insert: list):
+def alternate_insert_delete(AVL_list: AVLTreeList, elements_to_insert: list) -> int:
     rotcnt = 0
     while elements_to_insert:
         i = rand.randint(0, len(elements_to_insert) - 1)
@@ -92,24 +93,32 @@ def alternate_insert_delete(AVL_list: AVLTreeList, elements_to_insert: list):
     return rotcnt
 
 
-def q1():
+def q11():
+    results = []
     for i in ALL_I_VALUES:
+        n = 1500 * 2 ** i
         t1 = time.perf_counter()
-        rotcnt, lst = insert_all_numbers(1500 * 2 ** i)
+        rotcnt, lst = insert_all_numbers(n)
         t2 = time.perf_counter()
-        print(f"i:{i}, time:{t2 - t1}, rotcnt: {rotcnt}")
+        results.append({'q': '1.1', 'i': i, 'n': n, 'rotations': rotcnt, 'time': t2 - t1})
+        print(f'q11, i: {i}')
+    return results
 
-
-def q2():
+def q12():
+    results = []
     for i in ALL_I_VALUES:
-        rotcnt, lst = insert_all_numbers(1500 * 2 ** i)
+        n = 1500 * 2 ** i
+        rotcnt, lst = insert_all_numbers(n)
         t1 = time.perf_counter()
         delete_all_elements(lst)
         t2 = time.perf_counter()
-        print(f"i: {i}, time: {t2 - t1}, rotcnt: {rotcnt}")
+        results.append({'q': '1.2', 'i': i, 'n': n, 'rotations': rotcnt, 'time': t2 - t1})
+        print(f'q12, i: {i}')
+    return results
 
 
-def q3():
+def q13():
+    results = []
     for i in ALL_I_VALUES:
         n = 1500 * i ** 2
         t1 = time.perf_counter()
@@ -119,7 +128,9 @@ def q3():
         t3 = time.perf_counter()
         rotcnt += alternate_insert_delete(lst, more_elements)
         t4 = time.perf_counter()
-        print(f"i:{i}, time: {(t4 - t3) + (t2 - t1)}, rotcnt: {rotcnt}")
+        results.append({'q': '1.3', 'i': i, 'n': n, 'rotations': rotcnt, 'time': (t4 - t3) + (t2 - t1)})
+        print(f'q13, i: {i}')
+    return results
 
 
 def avl_insert_first(n):
@@ -188,21 +199,92 @@ def timer(func, i):
     t1 = time.perf_counter()
     func(n)
     t2 = time.perf_counter()
-    return f"i: {i}, n: {n}, time: {t2 - t1}"
+    return {'q': '2', 'insertion place': '', 'list ds': '', 'i': i, 'n': n, 'time': t2 - t1, 'avg time': (t2 - t1) / n}
 
 
-print('q1')
-q1()
-print('q2')
-q2()
-print('q3')
-q3()
+def q1():
+    results = []
+    for func in [q11, q12, q13]:
+        results += func()
+    return results
 
 
-#
-# funcs = [[avl_insert_first, linked_list_insert_first, array_insert_first], [avl_random_insert, linked_list_random_insert, array_random_insert], [avl_insert_last, linked_list_insert_last, array_insert_last]]
-#
-# for insertion_position in funcs:
-#     for func in insertion_position:
-#         for i in range(1, 11):
-#             print(time)
+def q2_all_insert_first():
+    insertion_place = 'first'
+    results = []
+    for i in ALL_I_VALUES:
+        result = timer(avl_insert_first, i)
+        result['insertion place'] = insertion_place
+        result['list ds'] = 'avl'
+        results.append(result)
+
+        result = timer(linked_list_insert_first, i)
+        result['insertion place'] = insertion_place
+        result['list ds'] = 'linked'
+        results.append(result)
+
+        result = timer(array_insert_first, i)
+        result['insertion place'] = insertion_place
+        result['list ds'] = 'array'
+        results.append(result)
+    return results
+
+
+def q2_all_insert_rand():
+    insertion_place = 'random'
+    results = []
+    for i in ALL_I_VALUES:
+        result = timer(avl_random_insert, i)
+        result['insertion place'] = insertion_place
+        result['list ds'] = 'avl'
+        results.append(result)
+
+        result = timer(linked_list_random_insert, i)
+        result['insertion place'] = insertion_place
+        result['list ds'] = 'linked'
+        results.append(result)
+
+        result = timer(array_random_insert, i)
+        result['insertion place'] = insertion_place
+        result['list ds'] = 'array'
+        results.append(result)
+    return results
+
+
+def q2_all_insert_last():
+    insertion_place = 'last'
+    results = []
+    for i in ALL_I_VALUES:
+        result = timer(avl_insert_last, i)
+        result['insertion place'] = insertion_place
+        result['list ds'] = 'avl'
+        results.append(result)
+
+        result = timer(linked_list_insert_last, i)
+        result['insertion place'] = insertion_place
+        result['list ds'] = 'linked'
+        results.append(result)
+
+        result = timer(array_insert_last, i)
+        result['insertion place'] = insertion_place
+        result['list ds'] = 'array'
+        results.append(result)
+    return results
+
+
+def q2():
+    results = []
+    results += q2_all_insert_first()
+    results += q2_all_insert_rand()
+    results += q2_all_insert_last()
+    return results
+
+
+def export(filename, dict_list):
+    df = pd.DataFrame(dict_list)
+
+    df.to_excel(f'{filename}.xlsx', index=False)
+
+
+export('Question 1', q1())
+export('Question 2', q2())

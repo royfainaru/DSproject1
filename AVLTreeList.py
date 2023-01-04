@@ -460,9 +460,8 @@ class AVLNode(object):
         if balance_factor < -1:  # if the balance factor is negative
             right_bf = self.right.getBF()  # get the balance factor of the right child
             if right_bf > 0:
-                rotations_count += 2
                 # case of right-left rotate (double)
-                rotations_count += 2
+                rotations_count += 1
                 # RIGHT ROTATE
                 new_sub_root = AVLNode.rightRotate(self.right.left.left, self.right.left, self.right)
                 self.setRight(new_sub_root)
@@ -757,7 +756,7 @@ class AVLTreeList(object):
             index (int): The index of the value to be deleted.
         """
         if not 0 <= index < self.size:
-            return
+            return 0
 
         # cases of empty tree and only root
         if self.empty():
