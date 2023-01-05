@@ -1015,9 +1015,9 @@ class AVLTreeList(object):
         # from the AVL tree, and add it to the result tree list. Then delete the index from the indices tree list.
         while not indices_list.empty():
             i = rand.randint(0, indices_list.size - 1)
+            if i == 13:
+                print('sus i')
             random_index = indices_list.retrieve(i)
-            if random_index is None:
-                print('hello')
             result.append(self.retrieve(random_index))
             indices_list.delete(i)
 
