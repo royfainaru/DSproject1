@@ -11,21 +11,27 @@ import random as rand
 
 
 class AVLNode(object):
+    @classmethod
+    def virtual_node(cls):
+        return cls(None, True)
+
+
     """Constructor, you are allowed to add more fields.
 
 	@type value: str
 	@param value: data of your node
 	"""
-    def __init__(self, value):
+    def __init__(self, value, is_virtual=False):
         self.value = value
-        self.left = None
-        self.right = None
-        self.parent = None
-        self.height = 0
-        self.size = 1
+        self.left = self.virtual_node()
+        self.right = self.virtual_node()
+        self.parent = self.virtual_node()
+        self.height = 0 if not is_virtual else -1
+        self.size = 1 if not is_virtual else 0
+        self.is_virtual = is_virtual
 
     def __bool__(self):
-        return self.value is not None
+        return not self.is_virtual
 
     def __repr__(self):
         return f"{'<' if self.left else ''}{'^' if self.parent else ''}{f'({self.value})'}{'>' if self.right else ''}"
