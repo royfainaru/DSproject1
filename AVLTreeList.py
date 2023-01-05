@@ -23,9 +23,9 @@ class AVLNode(object):
 	"""
     def __init__(self, value, is_virtual=False):
         self.value = value
-        self.left = self.virtual_node()
-        self.right = self.virtual_node()
-        self.parent = self.virtual_node()
+        self.left: AVLNode | None = self.virtual_node() if not is_virtual else None
+        self.right: AVLNode | None = self.virtual_node() if not is_virtual else None
+        self.parent: AVLNode | None = self.virtual_node() if not is_virtual else None
         self.height = 0 if not is_virtual else -1
         self.size = 1 if not is_virtual else 0
         self.is_virtual = is_virtual
@@ -55,7 +55,7 @@ class AVLNode(object):
         Returns:
             int: The size of the binary tree.
         """
-        size = 1  # initialize size to 1 for the current node
+        size = 1 if self else 0  # initialize size to 1 for the current node
         if self.right:
             size += self.right.getSize()  # add size of right subtree
         if self.left:
@@ -76,7 +76,7 @@ class AVLNode(object):
             left_height = self.left.getHeight()  # get left height
         if self.right:
             right_height = self.right.getHeight()  # get right height
-        return max(left_height, right_height) + 1  # return the maximum of the left and right heights, plus 1
+        return max(left_height, right_height) + (1 if self else 0)  # return the maximum of the left and right heights, plus 1
 
     """returns the rank of the node in the tree that is rooted in self (1 <= rank <= tree size)
     
@@ -85,7 +85,7 @@ class AVLNode(object):
 	"""
     def getRank(self):
         if self.left:  # if there is a left child
-            return self.left.getSize() + 1  # return the size of the left subtree, plus 1 for the current node
+            return self.left.getSize() + (1 if self else 0)  # return the size of the left subtree, plus 1 for the current node
         # if there is no left child, return 1 for the current node if it's not virtual, 0 otherwise
         return 1 if self else 0
 
@@ -94,6 +94,7 @@ class AVLNode(object):
 	@returns: the index of the node in the tree that is rooted in self
 	"""
     def getIndex(self):
+        # virtual index = -1
         return self.getRank() - 1
 
     """returns the balance factor of the node
@@ -102,6 +103,9 @@ class AVLNode(object):
 	@returns: the balance factor of the node
 	"""
     def getBF(self):
+        if not self:
+            return 0
+
         left_height = -1  # initialize left height to -1
         right_height = -1  # initialize right height to -1
         if self.left:
@@ -129,6 +133,9 @@ class AVLNode(object):
         Returns:
             Any: The value of the node with the specified rank, or None if no such node exists.
         """
+        if not self:
+            return None
+
         if self.getRank() == rank:  # if the current node has the specified rank
             return self.value  # return the value of the current node
         elif self.getRank() < rank and self.right:  # if the rank is greater than the current rank and there is a right child
@@ -185,6 +192,9 @@ class AVLNode(object):
     # Set the left child of the node
     # Also update the size and height attributes of the node
     def setLeft(self, node):
+        if not self:
+            return
+
         self.left = node  # set the left child
         if node:  # if a node was provided
             node.setParent(self)  # set the parent of the node to the current node
@@ -199,6 +209,9 @@ class AVLNode(object):
     # Set the right child of the node
     # Also update the size and height attributes of the node
     def setRight(self, node):
+        if not self:
+            return
+
         self.right = node  # set the right child
         if node:  # if a node was provided
             node.setParent(self)  # set the parent of the node to the current node
@@ -211,6 +224,7 @@ class AVLNode(object):
 	@param node: a node
 	"""
     def setParent(self, node):
+        # virtual nodes prolly have parents
         self.parent = node
 
     """sets value
@@ -219,6 +233,8 @@ class AVLNode(object):
 	@param value: data
 	"""
     def setValue(self, value):
+        if not self:
+            return
         self.value = value
 
     """sets the height of the node
@@ -227,6 +243,8 @@ class AVLNode(object):
 	@param h: the height
 	"""
     def setHeight(self, height):
+        if not self:
+            return
         self.height = height
 
     """returns whether self is not a virtual node 
@@ -243,6 +261,8 @@ class AVLNode(object):
 	@param s: int
 	"""
     def setSize(self, size):
+        if not self:
+            return
         self.size = size
 
     """returns the size of the tree rooted in the node
@@ -278,6 +298,8 @@ class AVLNode(object):
             Returns:
                 int: The total number of rotations performed during the insertion.
             """
+        if not self:
+            raise NotImplementedError
 
         # rotations counter
         rotations_count = 0
@@ -360,6 +382,8 @@ class AVLNode(object):
             Returns:
                 int: The total number of rotations performed during the deletion.
             """
+        if not self:
+            raise NotImplemented
 
         # rotations counter
         rotations_count = 0
@@ -368,11 +392,12 @@ class AVLNode(object):
             # case 1 no children - leaf can be deleted simply
             if not self.right and not self.left:
                 if self.parent:
+                    #### IMPLEMENTED VIRTUAL NODES
                     # check which side to reconnect to parent
                     if self.parent.right is self:
-                        self.parent.setRight(None)
+                        self.parent.setRight(self.virtual_node())
                     if self.parent.left is self:
-                        self.parent.setLeft(None)
+                        self.parent.setLeft(self.virtual_node())
 
             # case 2 only left child - connect parent and child of deleted node
             # NEED TO CHECK IF THERE IS A PARENT TO RECONNECT
@@ -383,7 +408,7 @@ class AVLNode(object):
                         self.parent.setRight(self.right)
                     if self.parent.left is self:
                         self.parent.setLeft(self.right)
-                self.setRight(None)
+                self.setRight(self.virtual_node())
 
             # case 3 only right child - connect parent and child of deleted node
             elif self.left and not self.right:
@@ -393,7 +418,7 @@ class AVLNode(object):
                         self.parent.setRight(self.left)
                     if self.parent.left is self:
                         self.parent.setLeft(self.left)
-                self.setLeft(None)
+                self.setLeft(self.virtual_node())
 
             # both sides have children
             else:
@@ -445,6 +470,9 @@ class AVLNode(object):
         Returns:
             tuple: A tuple containing the new root of the balanced subtree, and the number of rotations performed.
         """
+        if not self:
+            raise NotImplemented
+
         # rotations counter
         rotations_count = 0
         balance_factor = self.getBF()  # get the balance factor of the current node
@@ -631,7 +659,7 @@ class AVLTreeList(object):
 	"""
     def __init__(self):
         self.size = 0
-        self.root: AVLNode | None = None
+        self.root: AVLNode = AVLNode.virtual_node()
 
     # add your fields here
 
@@ -715,7 +743,7 @@ class AVLTreeList(object):
 
         # update tree root after possible rotations
         self.root = new_root
-        self.root.setParent(None)
+        self.root.setParent(AVLNode.virtual_node())
 
         # update rotation count after possible rotations
         rotations_count += tmp_rot_cnt
@@ -768,7 +796,7 @@ class AVLTreeList(object):
         if self.empty():
             return 0
         if self.size == 1:
-            self.root = None
+            self.root = AVLNode.virtual_node()
             self.size = 0
             return 0
 
@@ -781,8 +809,6 @@ class AVLTreeList(object):
             elif self.root.predecessor():
                 self.root.setValue(self.root.predecessor().value)
                 return self.delete(index - 1)
-            else:
-                raise AssertionError
         ###
 
         # get rotation count from hepler function
@@ -794,7 +820,7 @@ class AVLTreeList(object):
 
         # update tree root after possible rotations
         self.root = new_root
-        self.root.setParent(None)
+        self.root.setParent(AVLNode.virtual_node())
 
         # update rotation count after possible rotations
         rotations_count += tmp_rot_cnt
@@ -1021,9 +1047,9 @@ class AVLTreeList(object):
         # from the AVL tree, and add it to the result tree list. Then delete the index from the indices tree list.
         while not indices_list.empty():
             i = rand.randint(0, indices_list.size - 1)
-            if i == 13:
-                print('sus i')
             random_index = indices_list.retrieve(i)
+            if random_index is None:
+                continue
             result.append(self.retrieve(random_index))
             indices_list.delete(i)
 
@@ -1057,19 +1083,8 @@ class AVLTreeList(object):
         # Calculate the absolute difference in height between the root of the AVL tree and the root of the tree list
         to_return = abs(self.root.getHeight() - lst.root.getHeight())
 
-        # Set p to the first node of the tree list
-        p: AVLNode = lst.first()
-
-        # Set max_p to the last node of the tree list
-        max_p = lst.last()
-
-        # While p is not the last node of the tree list, append its value to the AVL tree and move to the successor
-        while p != max_p:
-            self.append(p.value)
-            p = p.successor()
-
-        # Append the value of the last node of the tree list to the AVL tree
-        self.append(p.value)
+        self.root.insertLast(lst.root)
+        self.size = self.root.size
 
         # Return the absolute difference in height
         return to_return
@@ -1099,7 +1114,7 @@ class AVLTreeList(object):
         """
 
         # Set p to the first node of the AVL tree
-        p: AVLNode = self.first()
+        p: AVLNode = self.root.min()
 
         # Set i to 0
         i = 0

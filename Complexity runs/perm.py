@@ -11,7 +11,6 @@ def create_seq_list(n):
 
 
 def permute_list(lst: AVLTreeList):
-    rand.seed(10)
     return lst.permutation()
 
 
@@ -21,5 +20,10 @@ def timer(func, *args):
     return time.perf_counter() - t1
 
 
-lst = create_seq_list(74)
-print(timer(permute_list, lst))
+lst = create_seq_list(7004)
+perm_lst = lst.permutation()
+print(lst.length(), lst)
+print(perm_lst.length(), perm_lst)
+
+lst.concat(perm_lst)
+print(lst.length(), lst)
