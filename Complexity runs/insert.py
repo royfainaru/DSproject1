@@ -24,6 +24,3 @@ for n in n_lst:
 
 avl_df = pd.DataFrame(avl_times)
 list_df = pd.DataFrame(list_times)
-
-avl_df.to_excel('avl_times.xlsx')
-list_df.to_excel('list_times.xlsx')
