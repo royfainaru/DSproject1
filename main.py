@@ -284,6 +284,3 @@ def export(filename, dict_list):
     df = pd.DataFrame(dict_list)
 
     df.to_excel(f'{filename}.xlsx', index=False)
-
-
-export('test after delete root fix', q1())
