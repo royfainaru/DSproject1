@@ -286,5 +286,4 @@ def export(filename, dict_list):
     df.to_excel(f'{filename}.xlsx', index=False)
 
 
-export('Question 1', q1())
-export('Question 2', q2())
+export('test after delete root fix', q1())

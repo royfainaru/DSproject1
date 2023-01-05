@@ -700,7 +700,7 @@ class AVLTreeList(object):
             self.size = 1
             return 0
 
-        # get rotation count from hepler function
+        # get rotation count from helper function
         rank = index + 1
         rotations_count = self.root.insert(rank, new_node)
 
@@ -765,6 +765,19 @@ class AVLTreeList(object):
             self.root = None
             self.size = 0
             return 0
+
+        # delete root fix
+        ###
+        if self.root.getIndex() == index:
+            if self.root.successor():
+                self.root.setValue(self.root.successor().value)
+                return self.delete(index + 1)
+            elif self.root.predecessor():
+                self.root.setValue(self.root.predecessor().value)
+                return self.delete(index - 1)
+            else:
+                raise AssertionError
+        ###
 
         # get rotation count from hepler function
         rank = index + 1
@@ -1003,6 +1016,8 @@ class AVLTreeList(object):
         while not indices_list.empty():
             i = rand.randint(0, indices_list.size - 1)
             random_index = indices_list.retrieve(i)
+            if random_index is None:
+                print('hello')
             result.append(self.retrieve(random_index))
             indices_list.delete(i)
 
