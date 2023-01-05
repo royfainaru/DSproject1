@@ -283,7 +283,3 @@ def q2():
 def export(filename, dict_list):
     df = pd.DataFrame(dict_list)
     df.to_excel(f'{filename}.xlsx')
-
-
-export('virtual node tests', q1())
-export('virtual node tests 2', q2())

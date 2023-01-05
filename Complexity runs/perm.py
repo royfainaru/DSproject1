@@ -1,6 +1,6 @@
 import time
+import pandas as pd
 from AVLTreeList import AVLTreeList
-import random as rand
 
 
 def create_seq_list(n):
@@ -10,20 +10,17 @@ def create_seq_list(n):
     return result
 
 
-def permute_list(lst: AVLTreeList):
-    return lst.permutation()
-
-
 def timer(func, *args):
     t1 = time.perf_counter()
     func(*args)
     return time.perf_counter() - t1
 
 
-lst = create_seq_list(7004)
-perm_lst = lst.permutation()
-print(lst.length(), lst)
-print(perm_lst.length(), perm_lst)
-
-lst.concat(perm_lst)
-print(lst.length(), lst)
+n_lst = [1500 * 2 ** i for i in range(1, 9)]
+results = []
+for n in n_lst:
+    lst = AVLTreeList()
+    for i in range(n):
+        lst.append(i)
+    t = timer(AVLTreeList.permutation, lst)
+    results.append({'func': 'perm', 'n': n, 'time': t})
